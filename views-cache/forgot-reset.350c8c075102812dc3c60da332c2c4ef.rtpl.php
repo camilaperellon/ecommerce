@@ -26,7 +26,7 @@
 <!-- Automatic element centering -->
 <div class="lockscreen-wrapper">
   <div class="lockscreen-logo">
-    <a href="/curso/Ecommerce/res/admin/index2.html"><b>Admin</b>LTE</a>
+    <a href="/curso/Ecommerce/res/admin/login"><b>Admin</b>LTE</a>
   </div>
   
    <div class="help-block text-center">

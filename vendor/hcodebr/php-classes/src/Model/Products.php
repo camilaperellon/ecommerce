@@ -6,7 +6,7 @@ use \Hcode\DB\Sql;
 use \Hcode\Model;
 USE \Hcode\Mailer;
 
-class Products extends Model{
+class Product extends Model{
 
 	public static function listAll(){
 
