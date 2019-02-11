@@ -34,6 +34,17 @@ class Product extends Model{
         $this->setData($results[0]);
     }
 
+    public static function checkList($list){
+
+        foreach ($list as &$row) {
+            $p = new Product();
+            $p->setData($row);
+            $row = $p->getValues();
+        }
+
+        return $list;
+    }
+
 
     public function get($idproduct){
 
@@ -65,10 +76,10 @@ class Product extends Model{
             "site" . DIRECTORY_SEPARATOR . 
             "img" . DIRECTORY_SEPARATOR . 
             "products" . DIRECTORY_SEPARATOR .
-            $this->getidproduct(). "jpg"
+            $this->getidproduct() . ".jpg"
         )){
 
-            $url = "/curso/Ecommerce/res/site/img/products/" . $this->getidproduct() . ".jpg";
+            $url = "http://127.0.0.1/curso/Ecommerce/res/site/img/products/" . $this->getidproduct() . ".jpg";
         }else{
 
             $url = "/curso/Ecommerce/res/site/img/product.jpg";
@@ -112,8 +123,8 @@ class Product extends Model{
             "res" . DIRECTORY_SEPARATOR . 
             "site" . DIRECTORY_SEPARATOR . 
             "img" . DIRECTORY_SEPARATOR . 
-            "products" . DIRECTORY_SEPARATOR.
-            $this->getidproduct() . "jpg";
+            "products" . DIRECTORY_SEPARATOR .
+            $this->getidproduct() . ".jpg";
 
         imagejpeg($image, $dist);
 
