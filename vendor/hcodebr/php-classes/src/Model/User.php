@@ -5,12 +5,51 @@ namespace Hcode\Model;
 use \Hcode\DB\Sql;
 use \Hcode\Model;
 USE \Hcode\Mailer;
+use \Hcode\Model\Cart;
 
 class User extends Model{
 
 	const SESSION = "User";
 
 	const SECRET = "HcodePhp7_Secret";
+
+    public static function getFromSession(){
+
+        $user = new User();
+
+        if(isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0){
+
+            $user->setData($_SESSION[User::SESSION]);
+        }
+
+        return $user;
+    }
+
+    public static function checkLogin($inadmin = true){
+
+        if(!isset($_SESSION[User::SESSION])  //Verifica se se a sessão não existe
+            || !$_SESSION[User::SESSION]    //Se ela tá vazia
+            || !(int)$_SESSION[User::SESSION]["iduser"] > 0 ){ //se o id do usuário é maior q 0
+
+            //Não está logado
+            return false;
+        }else{
+
+            if($inadmin === true && $_SESSION[User::SESSION]['inadmin'] === true){ //verificando se o usuário tem acesso a area administrativa
+
+                return true;
+
+            }else if($inadmin === false){
+
+                return true;
+
+            }else{
+
+                return false;
+            }
+        }
+
+    }
 
 
 	public static function login($login, $password){
@@ -46,10 +85,7 @@ class User extends Model{
 
 	public static function verifyLogin($inadmin = true){
 
-		if(!isset($_SESSION[User::SESSION]) 
-			|| !$_SESSION[User::SESSION] 
-			|| !(int)$_SESSION[User::SESSION]["iduser"] > 0 
-			|| (bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin ){
+		if(User::checkLogin($indamin)){
 
 			header("Location: /curso/Ecommerce/index.php/admin/login");
 			exit;
@@ -222,6 +258,8 @@ class User extends Model{
      		":iduser"=>$this->getiduser()
      	));
      }
+
+
 }
 
 ?>
