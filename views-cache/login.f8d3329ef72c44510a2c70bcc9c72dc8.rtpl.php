@@ -43,7 +43,7 @@
                         <label class="inline" for="rememberme"><input type="checkbox" value="forever" id="rememberme" name="rememberme"> Manter conectado </label>
                     </p>
                     <p class="lost_password">
-                        <a href="/forgot">Esqueceu a senha?</a>
+                        <a href="/curso/Ecommerce/index.php/forgot">Esqueceu a senha?</a>
                     </p>
 
                     <div class="clear"></div>
