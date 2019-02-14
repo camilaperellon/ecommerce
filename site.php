@@ -159,7 +159,7 @@ $app->get('/login', function() {
 
 	$page->setTpl("login", [
 		'error'=>User::getError(),
-		'errorRegister'=>uSER::getErrorRegister(),
+		'errorRegister'=>User::getErrorRegister(),
 		'registerValues'=>(isset($_SESSION['registerValues'])) ? $_SESSION['registerValues'] :['name'=>'', 'email'=>'', 'phone'=>'']
 	]);
 });
@@ -300,6 +300,65 @@ $app->post('/forgot/reset', function() {
 	$page = new Page();
 
 	$page->setTpl("forgot-reset-success");
+
+});
+
+$app->get('/profile', function() {
+
+	User::verifyLogin(false);
+
+	$user = User::getFromSession();
+
+	$page = new Page();
+
+	$page->setTpl("profile", [
+		'user'=>$user->getValues(),
+		'profileMsg'=>User::getSuccess(),
+		'profileError'=>User::getError()
+	]);
+
+});
+
+$app->post('/profile', function() {
+
+	User::verifyLogin(false);
+
+	if(!isset($_POST['desperson']) || $_POST['desperson'] === ''){
+
+		User::setError("Preencha seu nome");
+		header("Location: /curso/Ecommerce/index.php/profile");
+		exit;
+	}
+
+	if(!isset($_POST['desemail']) || $_POST['desemail'] === ''){
+
+		User::setError("Preencha seu email");
+		header("Location: /curso/Ecommerce/index.php/profile");
+		exit;
+	}
+	
+	$user = User::getFromSession();
+
+	if($_POST['desemail'] !== $user->getdesemail()){
+
+		if(User::checkLoginExists($_POST['desemail'])){
+
+			User::setError("Este e-mail já está cadastrado");
+		}
+	}
+
+	$_POST['inadmin'] = $user->getinadmin();
+	$_POST['despassword'] = $user->getdespassword();
+	$_POST['deslogin'] = $_POST['desemail'];
+
+	$user->setData($_POST);
+
+	$user->update();
+
+	User::setSuccess("Dados Alterados com Sucesso");
+
+	header("Location: /curso/Ecommerce/index.php/profile");
+	exit;
 
 });
 
