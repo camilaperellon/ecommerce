@@ -141,16 +141,110 @@ $app->get('/checkout', function() {
 
 	User::verifyLogin(false);
 
+	$address = new Address();
+
 	$cart = Cart::getFromSession();
 
-	$address = new Address();
+	if(!isset($_GET['zipcode'])){
+
+		$_GET['zipcode'] = $cart->getdeszipcode();
+	}
+
+	if(isset($_GET['zipcode'])){
+
+		$address->loadFromCEP($_GET['zipcode']);
+
+		$cart->setdeszipcode($_GET['zipcode']);
+
+		$cart->save();
+
+		$cart->getCalculateTotal();
+	}
+
+	if (!$address->getdesaddress()) $address->setdesaddress('');
+    if (!$address->getdescomplement()) $address->setdescomplement('');
+    if (!$address->getdesdistrict()) $address->setdesdistrict('');
+    if (!$address->getdescity()) $address->setdescity('');
+    if (!$address->getdesstate()) $address->setdesstate('');
+    if (!$address->getdescountry()) $address->setdescountry('');
+    if (!$address->getdeszipcode()) $address->setdeszipcode('');
 
 	$page = new Page();
 
 	$page->setTpl("checkout",[
 		'cart'=>$cart->getValues(),
-		'address'=>$address->getValues()
+		'address'=>$address->getValues(),
+		'products'=>$cart->getProducts(),
+		'error'=>Address::getMsgError()
 	]);
+});
+
+$app->post('/checkout', function() {
+
+	User::verifyLogin(false);
+
+	if(!isset($_POST['zipcode']) || $_POST['zipcode'] === ''){
+
+		Address::setmsgError("Informe o CEP.");
+
+		header("Location: /curso/Ecommerce/index.php/checkout");
+		exit;
+	}
+
+	if(!isset($_POST['desaddress']) || $_POST['desaddress'] === ''){
+
+		Address::setmsgError("Informe o endereço.");
+
+		header("Location: /curso/Ecommerce/index.php/checkout");
+		exit;
+	}
+
+	if(!isset($_POST['desdistrict']) || $_POST['desdistrict'] === ''){
+
+		Address::setmsgError("Informe o Bairro.");
+
+		header("Location: /curso/Ecommerce/index.php/checkout");
+		exit;
+	}
+
+	if(!isset($_POST['descity']) || $_POST['descity'] === ''){
+
+		Address::setmsgError("Informe a cidade.");
+
+		header("Location: /curso/Ecommerce/index.php/checkout");
+		exit;
+	}
+
+	if(!isset($_POST['desstate']) || $_POST['desstate'] === ''){
+
+		Address::setmsgError("Informe o estado.");
+
+		header("Location: /curso/Ecommerce/index.php/checkout");
+		exit;
+	}
+
+	if(!isset($_POST['descountry']) || $_POST['descountry'] === ''){
+
+		Address::setmsgError("Informe o país.");
+
+		header("Location: /curso/Ecommerce/index.php/checkout");
+		exit;
+	}
+
+	$user = User::getFromSession();
+
+	$address = new Address();
+
+	$_POST['deszipcode'] = $_POST['zipcode'];
+	$_POST['idperson'] = $user->getidperson();
+
+	$address->setData($_POST);
+
+	$address->save();
+
+	header("Location: /curso/Ecommerce/index.php/order");
+	exit;
+	
 });
 
 $app->get('/login', function() {
@@ -175,6 +269,7 @@ $app->post('/login', function() {
 		User::setError($e->getMessage());
 		
 	}
+
 	header("Location: /curso/Ecommerce/index.php/checkout");
 	exit;
 });
@@ -341,7 +436,7 @@ $app->post('/profile', function() {
 
 	if($_POST['desemail'] !== $user->getdesemail()){
 
-		if(User::checkLoginExists($_POST['desemail'])){
+		if(User::checkLoginExists($_POST['desemail']) === true){
 
 			User::setError("Este e-mail já está cadastrado");
 		}
@@ -354,6 +449,8 @@ $app->post('/profile', function() {
 	$user->setData($_POST);
 
 	$user->update();
+
+	$_SESSION[User::SESSION] = $user->getValues();
 
 	User::setSuccess("Dados Alterados com Sucesso");
 

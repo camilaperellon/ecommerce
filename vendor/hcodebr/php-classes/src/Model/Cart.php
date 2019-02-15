@@ -203,9 +203,10 @@ class Cart extends Model{
      			'sCdAvisoRecebimento'=>'S'
      		]);
 
-     		$xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs);
+     		$xml = simplexml_load_file(utf8_encode("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs));
 
-     		$result = $xml->Servico->cServico;
+
+     		$result = $xml->Servicos->cServico;
 
      		if($result->MsgErro != ''){
 
@@ -222,6 +223,7 @@ class Cart extends Model{
      		$this->save();
 
      		return $result;
+     		
 
      	}
 
@@ -258,7 +260,7 @@ class Cart extends Model{
 
      	if($this->getdeszipcode() != ''){
 
-     		$this->setFreight($this->getdeszipcode);
+     		$this->setFreight($this->getdeszipcode());
      	}
      }
 
