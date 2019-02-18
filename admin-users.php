@@ -3,6 +3,64 @@
 use \Hcode\PageAdmin;
 use \Hcode\Model\User;
 
+$app->get('/admin/users/:iduser/password', function($iduser){
+
+	User::verifyLogin();
+
+	$user = new User();
+
+	$user->get((int)$iduser);
+
+	$page = new PageAdmin();
+
+	$page->setTpl("users-password", [
+		"user"=>$user->getValues(),
+		'msgError'=>$user->getError(),
+		'msgSuccess'=>$user->getSuccess()
+	]);
+
+});
+
+$app->post('/admin/users/:iduser/password', function($iduser){
+
+	User::verifyLogin();
+
+	if(!isset($_POST['despassword']) || $_POST['despassword'] === ''){
+
+		User::setError("Preencha a nova senha");
+
+		header("Location: /curso/Ecommerce/index.php/admin/users/$iduser/password");
+		exit;
+	}
+
+	if(!isset($_POST['despassword-confirm']) || $_POST['despassword-confirm'] === ''){
+
+		User::setError("Preencha a confirmação da nova senha");
+
+		header("Location: /curso/Ecommerce/index.php/admin/users/$iduser/password");
+		exit;
+	}
+
+	if($_POST['despassword'] != $_POST['despassword-confirm']){
+
+		User::setError("Senhas Diferentes");
+
+		header("Location: /curso/Ecommerce/index.php/admin/users/$iduser/password");
+		exit;
+	}
+
+	$user = new User();
+
+	$user->get((int)$iduser);
+
+	$user->setPassword(User::getPasswordHash($_POST['despassword']));
+
+	User::setSuccess("Senha Alterada Com Sucesso");
+
+	header("Location: /curso/Ecommerce/index.php/admin/users/$iduser/password");
+	exit;
+});
+
 $app->get('/admin/users', function() {
 
 	User::verifyLogin();
@@ -67,6 +125,7 @@ $app->get('/admin/users/:iduser/delete', function($iduser) {
 	$user->delete();
 
 	header("Location: /curso/Ecommerce/index.php/admin/users");
+	exit;
 
 });
 
@@ -120,5 +179,7 @@ $app->post('/admin/users/:iduser', function($iduser) {
 	exit;
 
 });
+
+
 
 ?>
