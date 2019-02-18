@@ -523,7 +523,7 @@ $app->get('/boleto/:idorder', function($idorder) {
 
 	// DADOS DO SEU CLIENTE
 	$dadosboleto["sacado"] = utf8_encode($order->getdesperson());
-	$dadosboleto["endereco1"] = utf8_encode($order->getdesaddress()) . " " . utf8_encode($order->getdesdistrict());
+	$dadosboleto["endereco1"] = utf8_encode($order->getdesaddress()). " " .utf8_encode($order->getdesdistrict());
 	$dadosboleto["endereco2"] = utf8_encode($order->getdescity()) . "" . utf8_encode($order->getdesstate()) . "" . utf8_encode($order->getdescountry()) . "CEP: " . $order->getdeszipcode();
 
 	// INFORMACOES PARA O CLIENTE
