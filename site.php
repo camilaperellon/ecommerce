@@ -293,20 +293,14 @@ $app->post('/login', function() {
 	exit;
 });
 
-$app->get('/logout', function() {
+$app->get("/logout", function(){
 
-	/*User::logout();
-
-	$product = new Product();
-
-	Cart::getFromSession();
-
-	$cart->removeProduct(, true);*/
-
-	header("Location: /curso/Ecommerce/index.php/login");
-	exit;
+	User::logout();
+    
+    header("Location: /curso/Ecommerce/index.php/login");
+    
+    exit;
 });
-
 $app->post('/register', function() {
 
 	$_SESSION['registerValues'] = $_POST;
