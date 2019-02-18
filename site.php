@@ -295,7 +295,13 @@ $app->post('/login', function() {
 
 $app->get('/logout', function() {
 
-	User::logout();
+	/*User::logout();
+
+	$product = new Product();
+
+	Cart::getFromSession();
+
+	$cart->removeProduct(, true);*/
 
 	header("Location: /curso/Ecommerce/index.php/login");
 	exit;

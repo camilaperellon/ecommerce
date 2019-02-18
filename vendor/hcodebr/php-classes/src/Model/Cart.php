@@ -138,6 +138,7 @@ class Cart extends Model{
 		$this->getCalculateTotal();  
 	}
 	    public function getProducts(){
+         
          $sql = new Sql();
 
          $rows = $sql->select("
