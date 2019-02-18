@@ -164,6 +164,7 @@ $app->get('/checkout', function() {
 	}
 
 	if (!$address->getdesaddress()) $address->setdesaddress('');
+	if (!$address->getdesnumber()) $address->setdesnumber('');
     if (!$address->getdescomplement()) $address->setdescomplement('');
     if (!$address->getdesdistrict()) $address->setdesdistrict('');
     if (!$address->getdescity()) $address->setdescity('');
@@ -177,7 +178,7 @@ $app->get('/checkout', function() {
 		'cart'=>$cart->getValues(),
 		'address'=>$address->getValues(),
 		'products'=>$cart->getProducts(),
-		'error'=>Address::getMsgError()
+		'checkoutError'=>Address::getMsgError()
 	]);
 });
 
@@ -294,13 +295,16 @@ $app->post('/login', function() {
 });
 
 $app->get("/logout", function(){
-
-	User::logout();
+    User::logout();
+    
+    Cart::removeToSession();
+    
+    session_regenerate_id();
     
     header("Location: /curso/Ecommerce/index.php/login");
-    
     exit;
 });
+
 $app->post('/register', function() {
 
 	$_SESSION['registerValues'] = $_POST;

@@ -52,6 +52,11 @@ class Cart extends Model{
 		return $cart;
 	}
 
+	public static function removeToSession()
+    {
+       $_SESSION[Cart::SESSION] = NULL;
+    }
+
 	public function setToSession(){
 
 		$_SESSION[Cart::SESSION] = $this->getValues();
@@ -185,7 +190,8 @@ class Cart extends Model{
 
      	if($totals['nrqtd'] > 0){
 
-     		if($totals['vlwidth'] < 2 ) $totals['vlwidth'] = 2;
+     		if($totals['vlwidth'] < 11 ) $totals['vlwidth'] = 11;
+     		if($totals['vlheight'] < 2 ) $totals['vlheight'] = 2;
      		if($totals['vllength'] < 16) $totals['vllength'] = 16;
 
      		$qs = http_build_query([
