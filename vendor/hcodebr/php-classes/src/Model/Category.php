@@ -194,9 +194,7 @@ class Category extends Model{
             'data'=>$results,
             'total'=>(int)$resultTotal[0]["nrtotal"],
             'pages'=>ceil($resultTotal[0]["nrtotal"]/$itemsPerPage)  //ceil- função que coverte arredondando para cima (inteiro)
-        ];
-
-        
+        ];  
     }
 }
 
